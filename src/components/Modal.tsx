@@ -20,7 +20,8 @@ type DocumentType = {
   pages: number;
 };
 
-import { IDocument } from '@/app/models/Document';
+import { IDocument } from '@/types/document';
+import { activities, categories, issuingAgency } from '@/api/documentData';
 
 type DocumentTableProps = {
   filteredDocuments: IDocument[];
@@ -58,15 +59,15 @@ const Modal = ({
             <p><strong>Trích yếu:</strong> {selectedDocument.summary}</p>
             <p><strong>Độ khẩn:</strong> {selectedDocument.urgency}</p>
             <p><strong>Độ mật:</strong> {selectedDocument.confidentiality}</p>
-            <p><strong>Loại văn bản:</strong> {selectedDocument.type}</p>
-            <p><strong>Cơ quan ban hành:</strong> {selectedDocument.authority}</p>
-            <p><strong>Lĩnh vực hoạt động:</strong> {selectedDocument.field}</p>
+            <p><strong>Loại văn bản:</strong> {categories.find(t => t.id === selectedDocument.type)?.name}</p>
+            <p><strong>Cơ quan ban hành:</strong> {issuingAgency.find(a => a.id === selectedDocument.authority)?.name}</p>
+            <p><strong>Lĩnh vực hoạt động:</strong> {activities.find(f => f.id === selectedDocument.field)?.name}</p>
             <p><strong>Người ký:</strong> {selectedDocument.signer}</p>
             <p><strong>Nơi nhận:</strong> {selectedDocument.recipients || 'Không có'}</p>
             <p><strong>File đính kèm:</strong> {selectedDocument.file}</p>
             <p><strong>Số trang:</strong> {selectedDocument.pages}</p>
           </div>
-
+    
           {/* Lượt truy cập - góc dưới bên phải */}
           <div className="absolute bottom-6 right-6">
             <div className="bg-blue-50 rounded-lg border border-blue-200 p-3 shadow-sm">

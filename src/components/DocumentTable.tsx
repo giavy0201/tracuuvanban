@@ -42,7 +42,10 @@ const DocumentTable = ({ filteredDocuments, setSelectedDocument }: DocumentTable
             className={`border-t border-gray-200 hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}
           >
             <td className="p-4 font-medium text-blue-600">{doc.id}</td>
-            <td className="p-4 text-gray-600">{doc.date}</td>
+            <td className="p-4 text-gray-600">
+              {new Date(doc.date).toLocaleDateString('vi-VN')}
+            </td>
+
             <td
               className="p-4 text-sm text-gray-800 cursor-pointer hover:underline"
               onClick={() => setSelectedDocument(doc)}
