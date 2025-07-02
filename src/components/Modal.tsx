@@ -20,10 +20,16 @@ type DocumentType = {
   pages: number;
 };
 
+import { IDocument } from '@/app/models/Document';
+
+type DocumentTableProps = {
+  filteredDocuments: IDocument[];
+  setSelectedDocument: (doc: IDocument) => void;
+};
 type ModalProps = {
-  selectedDocument: DocumentType | null;
-  setSelectedDocument: (doc: DocumentType | null) => void;
-  relatedDocuments: DocumentType[];
+  selectedDocument: IDocument | null;
+  setSelectedDocument: (doc: IDocument | null) => void;
+  relatedDocuments: IDocument[];
   selectedCategory: string;
   selectedActivity: string;
   selectedIssuingAgency: string;
@@ -91,3 +97,4 @@ const Modal = ({
 );
 
 export default Modal;
+

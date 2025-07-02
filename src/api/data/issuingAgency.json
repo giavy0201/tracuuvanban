@@ -1,0 +1,8 @@
+[
+  { "id": "bo-chinh-tri", "name": "Bộ Chính trị" },
+  { "id": "chinh-phu", "name": "Chính phủ" },
+  { "id": "bo-nganh-khac", "name": "Bộ, ngành khác" },
+  { "id": "bo-giao-duc-dao-tao", "name": "Bộ Giáo dục-đào tạo" },
+  { "id": "dai-hoc-hue", "name": "Đại học Huế" },
+  { "id": "ubnd-tinh/thanh-pho", "name": "UBND tỉnh/thành phố" }
+]

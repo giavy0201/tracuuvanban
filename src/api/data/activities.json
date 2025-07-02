@@ -1,0 +1,17 @@
+[
+  { "id": "hanh-chinh", "name": "Hành chính - Tổng hợp" },
+  { "id": "thi-dua", "name": "Thi đua - Khen thưởng" },
+  { "id": "dao-tao", "name": "Đào tạo" },
+  { "id": "khoa-hoc", "name": "Khoa học - Công nghệ - Môi trường" },
+  { "id": "cong-nghe", "name": "Công nghệ Thông tin" },
+  { "id": "ke-hoach-tai-chinh", "name": "Kế hoạch tài chính" },
+  { "id": "co-so-vat-chat", "name": "Cơ sở vật chất" },
+  { "id": "hop-tac-quoc-te", "name": "Hợp tác quốc tế" },
+  { "id": "co-so-vat-chat-xay-dung-co-ban", "name": "Cơ sở vật chất - Xây dựng cơ bản" },
+  { "id": "cong-tac-hoc-sinh-sinh-vien", "name": "Công tác học sinh - sinh viên" },
+  { "id": "to-chuc-can-bo", "name": "Tổ chức - Cán bộ" },
+  { "id": "thanh-tra-phap-che", "name": "Thanh tra - Pháp chế" },
+  { "id": "doan-the", "name": "Đoàn thể" },
+  { "id": "kiem-dinh-chat-luong-GDĐH", "name": "Kiểm định chất lượng GDDH" },
+  { "id": "cac-hoat-dong-khac", "name": "Các hoạt động khác" }
+]

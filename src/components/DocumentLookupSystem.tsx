@@ -1,16 +1,50 @@
-import React, { useState } from 'react';
-import Header from './Header';
-import Sidebar from './Sidebar';
-import CategoryFilter from './CategoryFilter';
-import ActivityFilter from './ActivityFilter';
-import IssuingAgencyFilter from './IssuingAgencyFilter';
-import MainContent from './MainContent';
-import SearchSection from './SearchSection';
-import DocumentTable from './DocumentTable';
-import Pagination from './Pagination';
-import Modal from './Modal';
-import Footer from './Footer';
-import { DocumentType, documents, categories, activities, issuingAgency } from '@/api/documentData';
+import React, { useState, useEffect } from 'react';
+import Header from '@/components/Header';
+import Sidebar from '@/components/Sidebar';
+import CategoryFilter from '@/components/CategoryFilter';
+import ActivityFilter from '@/components/ActivityFilter';
+import IssuingAgencyFilter from '@/components/IssuingAgencyFilter';
+import MainContent from '@/components/MainContent';
+import SearchSection from '@/components/SearchSection';
+import DocumentTable from '@/components/DocumentTable';
+import Pagination from '@/components/Pagination';
+import Modal from '@/components/Modal';
+import Footer from '@/components/Footer';
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Activity {
+  id: string;
+  name: string;
+}
+
+interface IssuingAgency {
+  id: string;
+  name: string;
+}
+
+type DocumentType = {
+  id: string;
+  date: string;
+  title: string;
+  code: string;
+  refNumber: string;
+  createdAt: string;
+  issuedDate: string;
+  summary: string;
+  urgency: string;
+  confidentiality: string;
+  type: string;
+  authority: string;
+  field: string;
+  signer: string;
+  recipients?: string;
+  file: string;
+  pages: number;
+};
 
 const DocumentLookupSystem = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,10 +53,55 @@ const DocumentLookupSystem = () => {
   const [selectedIssuingAgency, setSelectedIssuingAgency] = useState('');
   const [selectedDocument, setSelectedDocument] = useState<DocumentType | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [documents, setDocuments] = useState<DocumentType[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [issuingAgencies, setIssuingAgencies] = useState<IssuingAgency[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const documentsPerPage = 10;
 
-  const filteredDocuments = documents.filter(doc => 
-    (doc.title.toLowerCase().includes(searchTerm.toLowerCase()) || doc.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [docsRes, catsRes, actsRes, iasRes] = await Promise.all([
+          fetch('/api/documents'),
+          fetch('/api/categories'),
+          fetch('/api/activities'),
+          fetch('/api/issuing-agencies'),
+        ]);
+
+        if (!docsRes.ok) throw new Error(`Documents: ${docsRes.status} - ${docsRes.statusText}`);
+        if (!catsRes.ok) throw new Error(`Categories: ${catsRes.status} - ${catsRes.statusText}`);
+        if (!actsRes.ok) throw new Error(`Activities: ${actsRes.status} - ${actsRes.statusText}`);
+        if (!iasRes.ok) throw new Error(`Issuing Agencies: ${iasRes.status} - ${iasRes.statusText}`);
+
+        const [documentsData, categoriesData, activitiesData, issuingAgenciesData] = await Promise.all([
+          docsRes.json(),
+          catsRes.json(),
+          actsRes.json(),
+          iasRes.json(),
+        ]);
+
+        setDocuments(documentsData);
+        setCategories(categoriesData);
+        setActivities(activitiesData);
+        setIssuingAgencies(issuingAgenciesData);
+        setLoading(false);
+      } catch (err) {
+        console.error('Fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Error fetching data');
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const filteredDocuments = documents.filter((doc) =>
+    (doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     doc.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (!selectedCategory || doc.type === selectedCategory) &&
     (!selectedActivity || doc.field === selectedActivity) &&
     (!selectedIssuingAgency || doc.authority === selectedIssuingAgency)
@@ -32,19 +111,22 @@ const DocumentLookupSystem = () => {
   const startIndex = (currentPage - 1) * documentsPerPage;
   const endIndex = startIndex + documentsPerPage;
   const paginatedDocuments = filteredDocuments.slice(startIndex, endIndex);
-  const hasMore = currentPage < totalPages;
 
   const handleViewMore = () => {
-    if (hasMore) setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
   const relatedDocuments = selectedDocument
-    ? documents.filter(doc => 
-        (selectedCategory && doc.type === selectedCategory) ||
-        (selectedActivity && doc.field === selectedActivity) ||
-        (selectedIssuingAgency && doc.authority === selectedIssuingAgency)
+    ? documents.filter((doc) =>
+        doc.id !== selectedDocument.id &&
+        ((selectedCategory && doc.type === selectedCategory) ||
+         (selectedActivity && doc.field === selectedActivity) ||
+         (selectedIssuingAgency && doc.authority === selectedIssuingAgency))
       )
     : [];
+
+  if (loading) return <div className="min-h-screen bg-gray-50 font-sans">Đang tải...</div>;
+  if (error) return <div className="min-h-screen bg-gray-50 font-sans">Lỗi: {error}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans" data-component-id="root-000">
@@ -66,7 +148,7 @@ const DocumentLookupSystem = () => {
             setSelectedIssuingAgency={setSelectedIssuingAgency}
           />
           <IssuingAgencyFilter
-            issuingAgency={issuingAgency}
+            issuingAgency={issuingAgencies}
             selectedIssuingAgency={selectedIssuingAgency}
             setSelectedIssuingAgency={setSelectedIssuingAgency}
             setSelectedCategory={setSelectedCategory}
@@ -81,12 +163,8 @@ const DocumentLookupSystem = () => {
                 Tìm thấy {filteredDocuments.length} văn bản - Hiển thị {paginatedDocuments.length} văn bản
               </p>
             </div>
-            <DocumentTable filteredDocuments={paginatedDocuments} setSelectedDocument={setSelectedDocument} />
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+             <DocumentTable filteredDocuments={paginatedDocuments} setSelectedDocument={(doc) => setSelectedDocument(doc)} /> 
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
           </div>
           <Modal
             selectedDocument={selectedDocument}

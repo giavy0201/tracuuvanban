@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model activities {
+  id        String      @id @db.VarChar(50)
+  name      String      @db.VarChar(255)
+  documents documents[]
+}
+
+model categories {
+  id        String      @id @db.VarChar(50)
+  name      String      @db.VarChar(255)
+  documents documents[]
+}
+
+model documents {
+  id              String          @id @db.VarChar(50)
+  date            DateTime        @db.Date
+  title           String          @db.VarChar(255)
+  code            String          @db.VarChar(50)
+  ref_number      String          @db.VarChar(100)
+  created_at      DateTime        @db.Timestamp(6)
+  issued_date     DateTime        @db.Date
+  summary         String
+  urgency         String          @db.VarChar(50)
+  confidentiality String          @db.VarChar(50)
+  type            String?         @db.VarChar(50)
+  authority       String?         @db.VarChar(50)
+  field           String?         @db.VarChar(50)
+  signer          String          @db.VarChar(100)
+  recipients      String?
+  file            String          @db.VarChar(100)
+  pages           Int
+  issuing_agency  issuing_agency? @relation(fields: [authority], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  activities      activities?     @relation(fields: [field], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categories      categories?     @relation(fields: [type], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model issuing_agency {
+  id        String      @id @db.VarChar(50)
+  name      String      @db.VarChar(255)
+  documents documents[]
+}

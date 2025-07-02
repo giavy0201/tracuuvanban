@@ -1,0 +1,15 @@
+[
+  { "id": "cong-van", "name": "Công văn - Văn bản điều hành khác" },
+  { "id": "quyet-dinh", "name": "Quyết định" },
+  { "id": "nghi-quyet", "name": "Nghị Quyết" },
+  { "id": "thong-tu", "name": "Thông tư" },
+  { "id": "chi-thi", "name": "Chỉ thị" },
+  { "id": "thong-bao", "name": "Thông báo" },
+  { "id": "luat-phap-lenh", "name": "Luật - Pháp lệnh" },
+  { "id": "ke-hoach", "name": "Kế hoạch" },
+  { "id": "nghi-dinh", "name": "Nghị định" },
+  { "id": "to-trinh", "name": "Tờ trình" },
+  { "id": "huong-dan", "name": "Hướng dẫn - Biểu mẫu" },
+  { "id": "quy-che", "name": "Quy chế" },
+  { "id": "chuong-trinh", "name": "Chương trình" }
+]
