@@ -55,7 +55,7 @@ const Modal = ({
           <div className="space-y-2 text-sm leading-relaxed">
             <p><strong>Mã số:</strong> {selectedDocument.code}</p>
             <p><strong>Số hiệu văn bản:</strong> {selectedDocument.refNumber}</p>
-            <p><strong>Thời điểm tạo:</strong> {selectedDocument.createdAt instanceof Date ? selectedDocument.createdAt.toLocaleString() : selectedDocument.createdAt}</p>
+            <p><strong>Thời điểm tạo:</strong> {typeof selectedDocument.createdAt === 'string' && !isNaN(Date.parse(selectedDocument.createdAt)) ? new Date(selectedDocument.createdAt).toLocaleString() : selectedDocument.createdAt}</p>
             <p><strong>Ngày ban hành:</strong> {selectedDocument.issuedDate}</p>
             <p><strong>Trích yếu:</strong> {selectedDocument.summary}</p>
             <p><strong>Độ khẩn:</strong> {selectedDocument.urgency}</p>
