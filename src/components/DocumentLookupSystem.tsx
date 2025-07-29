@@ -45,7 +45,14 @@ type DocumentType = {
   file: string;
   pages: number;
 };
-
+type ModalProps = {
+  selectedDocument: DocumentType | null;
+  setSelectedDocument: React.Dispatch<React.SetStateAction<DocumentType | null>>;
+  relatedDocuments: DocumentType[];
+  selectedCategory: string;
+  selectedActivity: string;
+  selectedIssuingAgency: string;
+};
 const DocumentLookupSystem = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');

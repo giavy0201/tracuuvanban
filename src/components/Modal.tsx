@@ -20,7 +20,7 @@ type DocumentType = {
   pages: number;
 };
 
-import { IDocument } from '@/types/document';
+import { IDocument } from '../types/document';
 import { activities, categories, issuingAgency } from '@/api/documentData';
 
 type DocumentTableProps = {
@@ -98,4 +98,3 @@ const Modal = ({
 );
 
 export default Modal;
-
