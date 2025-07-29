@@ -20,7 +20,8 @@ type DocumentType = {
   pages: number;
 };
 
-import { IDocument } from '../types/document';
+// Update the path below if your data file is in a different location
+import { IDocument } from '../app/types/data'; // Adjust the import path as necessary
 import { activities, categories, issuingAgency } from '@/api/documentData';
 
 type DocumentTableProps = {
@@ -54,14 +55,14 @@ const Modal = ({
           <div className="space-y-2 text-sm leading-relaxed">
             <p><strong>Mã số:</strong> {selectedDocument.code}</p>
             <p><strong>Số hiệu văn bản:</strong> {selectedDocument.refNumber}</p>
-            <p><strong>Thời điểm tạo:</strong> {selectedDocument.createdAt}</p>
+            <p><strong>Thời điểm tạo:</strong> {selectedDocument.createdAt instanceof Date ? selectedDocument.createdAt.toLocaleString() : selectedDocument.createdAt}</p>
             <p><strong>Ngày ban hành:</strong> {selectedDocument.issuedDate}</p>
             <p><strong>Trích yếu:</strong> {selectedDocument.summary}</p>
             <p><strong>Độ khẩn:</strong> {selectedDocument.urgency}</p>
             <p><strong>Độ mật:</strong> {selectedDocument.confidentiality}</p>
-            <p><strong>Loại văn bản:</strong> {categories.find(t => t.id === selectedDocument.type)?.name}</p>
-            <p><strong>Cơ quan ban hành:</strong> {issuingAgency.find(a => a.id === selectedDocument.authority)?.name}</p>
-            <p><strong>Lĩnh vực hoạt động:</strong> {activities.find(f => f.id === selectedDocument.field)?.name}</p>
+            <p><strong>Loại văn bản:</strong> {categories.find(t => t.id === selectedDocument.category)?.name}</p>
+            <p><strong>Cơ quan ban hành:</strong> {issuingAgency.find(a => a.id === selectedDocument.issuingAgency)?.name}</p>
+            <p><strong>Lĩnh vực hoạt động:</strong> {activities.find(f => f.id === selectedDocument.activity)?.name}</p>
             <p><strong>Người ký:</strong> {selectedDocument.signer}</p>
             <p><strong>Nơi nhận:</strong> {selectedDocument.recipients || 'Không có'}</p>
             <p><strong>File đính kèm:</strong> {selectedDocument.file}</p>
