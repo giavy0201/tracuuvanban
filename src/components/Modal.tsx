@@ -50,7 +50,7 @@ const Modal = ({
       <div className="w-full max-w-4xl mx-auto">
         
         {/* Thông tin chi tiết văn bản - chiếm toàn bộ */}
-        <div className="bg-white shadow-lg rounded-xl p-6 border border-gray-200 relative">
+        <div className="bg-white/100 shadow-lg rounded-xl p-6 border border-gray-200 relative">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Thông tin chi tiết văn bản</h2>
           <div className="space-y-2 text-sm leading-relaxed">
             <p><strong>Mã số:</strong> {selectedDocument.code}</p>
