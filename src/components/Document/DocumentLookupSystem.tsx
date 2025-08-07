@@ -191,17 +191,17 @@
 // export default DocumentLookupSystem;
 
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
-import CategoryFilter from '@/components/CategoryFilter';
-import ActivityFilter from '@/components/ActivityFilter';
-import IssuingAgencyFilter from '@/components/IssuingAgencyFilter';
-import MainContent from '@/components/MainContent';
-import SearchSection from '@/components/SearchSection';
-import DocumentTable from '@/components/DocumentTable';
-import Pagination from '@/components/Pagination';
-import Modal from '@/components/Modal';
-import Footer from '@/components/Footer';
+import Header from '@/components/home/Header';
+import Sidebar from '@/components/home/Sidebar';
+import CategoryFilter from '@/components/Category/CategoryFilter';
+import ActivityFilter from '@/components/Activity/ActivityFilter';
+import IssuingAgencyFilter from '@/components/IssuingAgency/IssuingAgencyFilter';
+import MainContent from '@/components/home/MainContent';
+import SearchSection from '@/components/home/SearchSection';
+import DocumentTable from '@/components/Document/DocumentTable';
+import Pagination from '@/components/home/Pagination';
+import Modal from '@/components/Document/Modal';
+import Footer from '@/components/home/Footer';
 import { IDocument, DocumentType } from '@/app/types/data';
 
 interface Category {
@@ -478,9 +478,9 @@ const DocumentLookupSystem = () => {
                   summary: doc.summary,
                   urgency: doc.urgency,
                   confidentiality: doc.confidentiality,
-                  type: doc.category,
+                  type: doc.category ,
                   authority: doc.issuingAgency,
-                  field: doc.activity,
+                  field: doc.activity ,
                   signer: doc.signer,
                   recipients: doc.recipients,
                   file: doc.file,

@@ -99,9 +99,9 @@
 // );
 
 // export default Modal;
-
-import React from "react";
-import { IDocument } from "../app/types/data";
+"use client";
+import React, { useState } from "react";
+import { IDocument } from "../../app/types/data";
 import { activities, categories, issuingAgency } from "@/api/documentData";
 
 type ModalProps = {
@@ -113,16 +113,47 @@ type ModalProps = {
   selectedIssuingAgency: string;
 };
 
-const formatDate = (dateStr: string): string => {
-  const date = new Date(dateStr);
-  return !isNaN(date.getTime()) ? date.toLocaleString("vi-VN") : dateStr;
-};
-
 const Modal: React.FC<ModalProps> = ({
   selectedDocument,
   setSelectedDocument,
 }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   if (!selectedDocument) return null;
+
+  const handleDownload = async (id: string, filename: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/documents/files/download?id=${id}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Không thể tải file");
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Lỗi khi tải file");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateStr: string): string => {
+    const date = new Date(dateStr);
+    return !isNaN(date.getTime()) ? date.toLocaleString("vi-VN") : dateStr;
+  };
+
+  const ensureString = (value: string | null | undefined): string => {
+    return value ?? "";
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-8 overflow-y-auto">
@@ -136,8 +167,8 @@ const Modal: React.FC<ModalProps> = ({
           <div className="space-y-3 text-sm md:text-base leading-relaxed">
             <p><strong>Mã số:</strong> {selectedDocument.code}</p>
             <p><strong>Số hiệu văn bản:</strong> {selectedDocument.refNumber}</p>
-            <p><strong>Thời điểm tạo:</strong> {formatDate(selectedDocument.createdAt)}</p>
-            <p><strong>Ngày ban hành:</strong> {formatDate(selectedDocument.issuedDate)}</p>
+            <p><strong>Ngày soạn thảo:</strong> {formatDate(selectedDocument.issuedDate)}</p>
+            <p><strong>Ngày ban hành:</strong> {formatDate(selectedDocument.createdAt)}</p>
             <p><strong>Trích yếu:</strong> {selectedDocument.summary}</p>
             <p><strong>Độ khẩn:</strong> {selectedDocument.urgency}</p>
             <p><strong>Độ mật:</strong> {selectedDocument.confidentiality}</p>
@@ -155,8 +186,21 @@ const Modal: React.FC<ModalProps> = ({
             </p>
             <p><strong>Người ký:</strong> {selectedDocument.signer}</p>
             <p><strong>Nơi nhận:</strong> {selectedDocument.recipients || "Không có"}</p>
-            <p><strong>File đính kèm:</strong> {selectedDocument.file}</p>
             <p><strong>Số trang:</strong> {selectedDocument.pages}</p>
+            <p><strong>File đính kèm:</strong> {selectedDocument.file}</p>
+            <button
+              type="button"
+              onClick={() => handleDownload(selectedDocument.id, ensureString(selectedDocument.file))}
+              disabled={loading}
+              className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              {loading ? "Đang tải..." : "Tải xuống"}
+            </button>
+
+            {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
         </div>
 
