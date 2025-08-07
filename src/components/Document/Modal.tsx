@@ -100,9 +100,11 @@
 
 // export default Modal;
 "use client";
+
 import React, { useState } from "react";
 import { IDocument } from "../../app/types/data";
 import { activities, categories, issuingAgency } from "@/api/documentData";
+import { toast } from "sonner";
 
 type ModalProps = {
   selectedDocument: IDocument | null;
@@ -118,7 +120,6 @@ const Modal: React.FC<ModalProps> = ({
   setSelectedDocument,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   if (!selectedDocument) return null;
 
@@ -126,10 +127,19 @@ const Modal: React.FC<ModalProps> = ({
     try {
       setLoading(true);
       const response = await fetch(`/api/documents/files/download?id=${id}`);
+
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Không thể tải file");
+        if (response.status === 404) {
+          toast.error("Không tìm thấy file. Đang tải lại trang...");
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          toast.error("Đã xảy ra lỗi khi tải file.");
+        }
+        return;
       }
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -137,10 +147,12 @@ const Modal: React.FC<ModalProps> = ({
       link.download = filename;
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Lỗi khi tải file");
+
+      toast.success("Tải file thành công!");
+    } catch (error) {
+      toast.error("Lỗi kết nối máy chủ!");
     } finally {
       setLoading(false);
     }
@@ -188,19 +200,18 @@ const Modal: React.FC<ModalProps> = ({
             <p><strong>Nơi nhận:</strong> {selectedDocument.recipients || "Không có"}</p>
             <p><strong>Số trang:</strong> {selectedDocument.pages}</p>
             <p><strong>File đính kèm:</strong> {selectedDocument.file}</p>
+
             <button
               type="button"
               onClick={() => handleDownload(selectedDocument.id, ensureString(selectedDocument.file))}
               disabled={loading}
-              className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               {loading ? "Đang tải..." : "Tải xuống"}
             </button>
-
-            {error && <p className="text-red-500 text-sm">{error}</p>}
           </div>
         </div>
 

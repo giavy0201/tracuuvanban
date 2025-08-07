@@ -723,6 +723,7 @@ import React, { useState, useEffect } from 'react';
 import { DocumentType } from '@/app/types/data';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft} from 'lucide-react';
+import { toast } from "sonner";
 type DocumentFormData = {
   id?: string;
   date: string;
@@ -870,9 +871,18 @@ const DocumentManager = () => {
       setLoading(true);
       const response = await fetch(`/api/documents/files/download?id=${id}`);
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Không thể tải file');
+          if (response.status === 404) {
+          toast.error("Không tìm thấy file. Đang tải lại trang...");
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          toast.error("Đã xảy ra lỗi khi tải file.");
+        }
+        return;
       }
+
+        
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -882,8 +892,9 @@ const DocumentManager = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+      toast.success("Tải file thành công!");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Lỗi khi tải file');
+      toast.error("Lỗi kết nối máy chủ!");
     } finally {
       setLoading(false);
     }

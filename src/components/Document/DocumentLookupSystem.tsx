@@ -203,7 +203,7 @@ import Pagination from '@/components/home/Pagination';
 import Modal from '@/components/Document/Modal';
 import Footer from '@/components/home/Footer';
 import { IDocument, DocumentType } from '@/app/types/data';
-
+import { Toaster } from "sonner";
 interface Category {
   id: string;
   name: string;
@@ -496,6 +496,7 @@ const DocumentLookupSystem = () => {
         </MainContent>
       </main>
       <Footer />
+       <Toaster richColors position="top-right" />
     </div>
   );
 };
