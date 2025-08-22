@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     const fileName = path.basename(document.file);
 
     // Trả file về client
-    return new NextResponse(fileData, {
+    return new NextResponse(new Uint8Array(fileData), {
       status: 200,
       headers: {
         'Content-Type': 'application/octet-stream',
