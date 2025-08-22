@@ -47,3 +47,11 @@ model issuing_agency {
   name      String      @db.VarChar(255)
   documents documents[]
 }
+
+model admins {
+  id        String   @id @default(uuid())
+  username  String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(255)   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

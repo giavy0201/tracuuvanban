@@ -13,9 +13,13 @@
     "@aws-sdk/client-s3": "^3.859.0",
     "@prisma/client": "^6.12.0",
     "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
+    "cookie": "^1.0.2",
     "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
     "formidable": "^3.5.4",
+    "jose": "^6.0.13",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.516.0",
     "mongoose": "^8.16.0",
     "multer": "^2.0.2",
@@ -28,15 +32,21 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
     "@types/date-fns": "^2.5.3",
     "@types/dotenv": "^6.1.1",
     "@types/formidable": "^3.4.5",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.96",
     "@types/multer": "^2.0.0",
-    "@types/node": "^20",
+    "@types/node": "^20.19.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.js"
   }
 }
