@@ -68,4 +68,5 @@ jobs:
             docker pull giavy/nextjs-hethongtravanban:latest
             docker stop nextjs-app || true
             docker rm nextjs-app || true
-            docker run -d --name nextjs-app -p 3000:3000 giavy/nextjs-hethongtravanban:latest
+            docker run -d --name nextjs-app -e DATABASE_URL=${{ secrets.DATABASE_URL }} -p 3000:3000 giavy/nextjs-hethongtravanban:latest
+
